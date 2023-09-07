@@ -1,11 +1,11 @@
-import React from 'react';
+import {memo} from 'react';
 import { Link } from 'react-router-dom';
 
 const Card = ({s}) => {
   return (
     <div className="card">
-      <Link to={`/movie/${s.imdbID}`}>
-        <div className="card-title"> {s.Title} </div>
+      <Link to={`/movie/${s.imdbID}`} className='card-cover'>
+        <h3 className="card-title header-3"> {s.Title} </h3>
         <div className="card-image">
           <img src={s.Poster} alt={s.Title} />
         </div>
@@ -24,4 +24,4 @@ const Card = ({s}) => {
   )
 }
 
-export default Card
+export default memo(Card);

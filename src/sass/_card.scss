@@ -1,32 +1,30 @@
 .card{
-  width: 100%;
+  // width: 100%;
+  // width: 40rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: $color-grey-dark;
   border-radius: 3px;
+  transition: all .3s;
 
+  &:hover{
+    transform: scale(1.005);
+    box-shadow: $shadow-light;
+  }
+
+  &-cover{
+    width: 100%;
+  }
+  
   &-image{
     width: 100%;
-    // padding: 2rem 0;
     
     &>img{
       width: 100%;
-      // object-fit: cover;
       display: block;
       aspect-ratio: 3/4;
     }
-  }
-
-  &-title{
-    font-size: 1.4rem;
-    font-weight: 500;
-    height: 5rem;
-    vertical-align: bottom;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
   }
 
   &-labels{
@@ -35,6 +33,17 @@
     justify-content: space-between;
     padding: 1rem .5rem;
     align-items: center;
+    color: $color-grey-700;
+
+    @include sm{
+      font-size: 1.4rem;
+    }
+    @include md-2{
+      font-size: 1.6rem;
+    }
+    @include lg{
+      font-size: 1.8rem;
+    }
 
     &>li{
       padding: 0.5rem;

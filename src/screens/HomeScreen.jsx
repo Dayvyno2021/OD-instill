@@ -12,50 +12,58 @@ const HomeScreen = () => {
   const currentYear = new Date().getFullYear();
 
   //The query string which we will use to query the OMDb API
-  const [searchParam, setSearchParam] = useState('')
+  const [searchParam, setSearchParam] = useState('');
 
-  const {data, isLoading} = useGetMoviesByIdentityQuery(searchParam);
+  //Store the url string in our session to avoid losing of data in cases of refresh or forward and backward click
+  const url = sessionStorage.getItem("url") ? sessionStorage.getItem("url") : '';
+  
+  //The RTK function making the query call to the OMDB database
+  const { data, isLoading } = useGetMoviesByIdentityQuery(searchParam || url);
 
-  //Handle movie title
+  //Handle movie title changes from the html input
   const [title, setTitle] = useState('');
+  //Store the exact title string (example "&s=title") needed to make query to the OMDB database
   const currentTitle = useRef('');
 
-  //Handle movie type
-  const [type, setType] = useState('')
+
+  //Handle movie type changes from the html input
+  const [type, setType] = useState('');
+  //Store the exact type string (example "&type=type") needed to make query to the OMDB database
   const currentType = useRef('')
 
-  //Handle year of movies' production
+  //Handle year of movies input from the html input
   const [year, setYear] = useState('');
+  //Store the exact year string (example "&y=year") needed to make query to the OMDB database
   const currentValidYear = useRef('')
 
-  //Handle page navigation
+
+  //Handle page changes from the pagination component
   const [page, setPage] = useState(1);
+  //Store the exact page string (example "&page=page") needed to make query to the OMDB database
   const currentPage = useRef('')
 
+
+  //The HTML form to extract the users input
   const handleSearch = (e) => {
     e.preventDefault();
 
-    // let validTitle = '';
-    // let validYear = '';
-    // let validType = '';
-    // let validPage = '';
-
     if (year < 0 || year > currentYear) {
+      //stop execution if value entered by user is -negative or above 2023
       return;
     } else {
       if (year > 0 && year <= currentYear) {
-        // validYear = '&y='.concat(year);
+        //extract the exact year string format needed to query the database
         currentValidYear.current = '&y='.concat(year);
       }
     }
 
     if (title !== '') {
-      // validTitle = '&s='.concat(title);
+      //Extract the exact title format needed to query the databse
       currentTitle.current = '&s='.concat(title);
     }
 
     if (type !== '') {
-      // validType = '&type='.concat(type);
+      //Extract the exact type format needed to query the databse
       currentType.current = '&type='.concat(type);
     }
     
@@ -63,22 +71,27 @@ const HomeScreen = () => {
       return;
     }
 
-    // validPage = '&page='.concat(page)
+    //Extract the exact page format needed to query the database
     currentPage.current = '&page='.concat(page)
 
-    // console.log('CURRENTITTLE: ', currentTitle)
-   
-    setSearchParam(process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current));
-    // console.log(process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current));
+    //searchString is the complete string need to query the database along with the database domain
+   const searchString = process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current)
+    setSearchParam(searchString);
+
+    //Lets a have a copy of the string in our session storage
+    sessionStorage.setItem('url', searchString);
   }
 
+  //This function handles the loading of a new page when a page value is clicked in the pagination
   const handlePageClick = (event, page) => {
+
     setPage(page)
     currentPage.current = '&page='.concat(page);
-    setSearchParam(process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current));
-    // console.log(searchParam)
-    // console.log(page)
 
+    const searchString = process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current)
+    setSearchParam(searchString);
+
+    sessionStorage.setItem("url", searchString);
   }
   
   useEffect(() => {
@@ -87,7 +100,7 @@ const HomeScreen = () => {
   return (
     <div className="home">
       {isLoading && <Loader />}
-      <h1 className="home-header">Search For Your Favorite Movie</h1>
+      <h1 className="home-header header-1">Search For Your Favorite Movie</h1>
       <form className="search-container" onSubmit={handleSearch}>
         <div className="input-control">
           <label htmlFor="title" className='input-control-label' >Movie Title</label>
@@ -121,12 +134,15 @@ const HomeScreen = () => {
         </div>
       </form>
       {
+        data?.Error && <div className="search-total"><p style={{color: 'orangered'}}> {data.Error} </p> </div>
+      }
+      {
         data?.Search?.length &&
         <>
           <div>
 
             <div className="search-result">
-              <h1 className="search-result-title">Related Movies</h1>
+              <h1 className="search-result-title header-2">Related Movies</h1>
 
               <div className="related-movies">
                 {

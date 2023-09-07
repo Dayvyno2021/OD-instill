@@ -1,0 +1,60 @@
+.error{
+  color: $color-red-400;
+}
+
+.header-1{
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.8rem;
+  background-color: $color-grey-dark;
+  padding: 2rem;
+  padding-bottom: 0;
+}
+
+.header-2{
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.header-3{
+  font-size: 1.4rem;
+  font-weight: 500;
+  height: 5rem;
+  vertical-align: bottom;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: $color-primary;
+
+  @include sm {
+    font-size: 1.6rem;
+  }
+
+  @include md-2 {
+    font-size: 1.8rem;
+  }
+
+  @include lg {
+    font-size: 2rem;
+  }
+}
+
+.text-1{
+  font-size: 1.4rem;
+}
+
+.space-3 {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+}
+
+.mb-1{
+  margin-bottom: 1rem;
+}
+
+.text{
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
