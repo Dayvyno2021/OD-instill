@@ -1,0 +1,48 @@
+.card{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $color-grey-dark;
+  border-radius: 3px;
+
+  &-image{
+    width: 100%;
+    // padding: 2rem 0;
+    
+    &>img{
+      width: 100%;
+      display: block;
+      height: auto;
+      aspect-ratio: 3/4;
+    }
+  }
+
+  &-title{
+    font-size: 1.4rem;
+    font-weight: 500;
+    height: 5rem;
+    vertical-align: bottom;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  &-labels{
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem .5rem;
+    align-items: center;
+
+    &>li{
+      padding: 0.5rem;
+
+      &>span:first-of-type{
+        font-weight: 500;
+        margin-right: .5rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+.home{
+  width: 100%;
+  background-color: $color-grey-light;
+
+  &-header{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.8rem;
+    background-color: $color-grey-dark;
+    padding: 2rem;
+    padding-bottom: 0;
+  }
+  
+  .search-container{
+    width: 100%;
+    padding: 2rem 5rem;
+    display: flex;
+    background-color: $color-grey-dark;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: $shadow-light;
+
+
+    .input-control{
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $color-grey-light;
+      padding-left: 1rem;
+      position: relative;
+
+      &-label{
+        color: $color-grey-600;
+        width: max-content;
+        font-weight: 500;
+      }
+      
+      &>.input{
+        width: 70%;
+        outline: none;
+        border: none;
+        border-radius: 3px;
+        padding: .5rem 1rem;
+        font-size: 1.3rem;
+        background-color: $color-neutral-100;
+        transition: all .3s;
+        color: $color-grey-500;
+        // padding-right: 2rem;
+
+        &::placeholder{
+          color: $color-grey-400;
+        }
+
+        &:focus, &:active{
+          background-color: $color-w;
+        }
+      }
+    }
+
+  .invalid-year {
+    color: $color-red-400;
+    position: relative;
+    text-align: center;
+    top: -5px;
+  }
+
+    .submit{
+
+      &>button{
+        width: 3rem;
+        height: 3rem;
+        border: none;
+        border-radius: 3px;
+        display: block;
+        margin-left: auto;
+        &>svg{
+          width: 2rem;
+          height: 2rem;
+          color: $color-grey-400;
+        }
+      }
+
+      .valid {
+        background-color: $color-neutral-100;
+        
+        &:focus, &:active{
+          background-color: $color-w;
+        }
+  
+      }
+
+      .invalid{
+        background-color: $color-stone-300;
+      }
+    }
+  }
+
+  .search-total{
+    background-color: $color-grey-dark;
+    padding: 2rem;
+    box-shadow: $shadow-light;
+    margin-bottom: 2rem;
+
+    &>p{
+      font-size: 1.4rem;
+      text-align: center;
+      font-weight: 500;
+      font-style: italic;
+      color: $color-grey-600;
+    }
+  }
+
+  .search-valid{
+    text-align: center;
+    font-style: italic;
+    color: $color-red-400;
+    margin-top: -0.8rem;
+    position: absolute;
+    left: 0;
+    bottom: -1.1rem;
+  }
+
+  .search-result{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 2rem;
+
+    &-title{
+      text-align: center;
+      margin-top: 1rem;
+    }
+  }
+
+  .related-movies{
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    padding: 2rem;
+    justify-content: center;
+    // flex-wrap: wrap;
+  }
+
+  &-pagination{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1rem;
+  }
+}
