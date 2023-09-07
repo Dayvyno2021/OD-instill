@@ -2,18 +2,17 @@ import { useState, useRef, useEffect} from 'react';
 import { useGetMoviesByIdentityQuery } from '../slices/apiSlices';
 import Card from '../components/Card';
 import Pagination from '../components/Pagination';
+import Loader from '../components/Loader';
 
 
 
 const HomeScreen = () => {
 
+  //Manages the year so that a user cannot choose a year above 2023
   const currentYear = new Date().getFullYear();
 
+  //The query string which we will use to query the OMDb API
   const [searchParam, setSearchParam] = useState('')
-
-  // const apiKey = '?i=tt3896198&apikey=4d147704';
-  // console.log('DATAAAPIKEY: ', process.env.REACT_APP_APIKEY);
-  
 
   const {data, isLoading} = useGetMoviesByIdentityQuery(searchParam);
 
@@ -87,6 +86,7 @@ const HomeScreen = () => {
 
   return (
     <div className="home">
+      {isLoading && <Loader />}
       <h1 className="home-header">Search For Your Favorite Movie</h1>
       <form className="search-container" onSubmit={handleSearch}>
         <div className="input-control">
@@ -119,13 +119,11 @@ const HomeScreen = () => {
             </svg>
           </button>
         </div>
-        {isLoading && <div className="search-total"><p>  loading...</p> </div>}
       </form>
       {
         data?.Search?.length &&
         <>
           <div>
-            <div className="search-total"><p>Total Related Movies: {data?.totalResults} </p> </div>
 
             <div className="search-result">
               <h1 className="search-result-title">Related Movies</h1>
@@ -140,6 +138,7 @@ const HomeScreen = () => {
               </div>
               
           </div>
+          <div className="search-total"><p>Total Related Movies: {data?.totalResults} </p> </div>
           <div className="home-pagination">
             <Pagination count={Math.ceil(data?.totalResults/10)} page={page} handlePageClick={handlePageClick} />
           </div>

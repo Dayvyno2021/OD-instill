@@ -12,8 +12,8 @@
     
     &>img{
       width: 100%;
+      // object-fit: cover;
       display: block;
-      height: auto;
       aspect-ratio: 3/4;
     }
   }

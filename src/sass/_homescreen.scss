@@ -1,6 +1,7 @@
 .home{
   width: 100%;
   background-color: $color-grey-light;
+  overflow: hidden;
 
   &-header{
     text-align: center;
@@ -141,7 +142,16 @@
     grid-template-columns: 1fr 1fr;
     padding: 2rem;
     justify-content: center;
-    // flex-wrap: wrap;
+
+    @include sm{
+      gap: 4rem;
+      padding: 2rem 4rem;
+    }
+
+    @include md{
+      gap: 4rem;
+      padding: 2rem 4rem;
+    }
   }
 
   &-pagination{
