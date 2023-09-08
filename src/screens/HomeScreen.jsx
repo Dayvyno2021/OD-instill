@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect} from 'react';
+import { useState, useRef, useEffect, useCallback} from 'react';
 import { useGetMoviesByIdentityQuery } from '../slices/apiSlices';
 import Card from '../components/Card';
 import Pagination from '../components/Pagination';
@@ -43,6 +43,21 @@ const HomeScreen = () => {
   const currentPage = useRef('')
 
 
+  //Function to the query url in session storage
+  const saveInSessionStorage = useCallback(() => { 
+
+    //Extract the exact page format needed to query the database
+    currentPage.current = '&page='.concat(page)
+
+    //searchString is the complete string need to query the database along with the database domain
+    const searchString = process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current)
+    setSearchParam(searchString);
+
+    sessionStorage.setItem("url", searchString);
+
+  }, [page])
+
+
   //The HTML form to extract the users input
   const handleSearch = (e) => {
     e.preventDefault();
@@ -71,27 +86,19 @@ const HomeScreen = () => {
       return;
     }
 
-    //Extract the exact page format needed to query the database
-    currentPage.current = '&page='.concat(page)
+    //Call the session storage function
+    saveInSessionStorage()
 
-    //searchString is the complete string need to query the database along with the database domain
-   const searchString = process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current)
-    setSearchParam(searchString);
-
-    //Lets a have a copy of the string in our session storage
-    sessionStorage.setItem('url', searchString);
   }
+
 
   //This function handles the loading of a new page when a page value is clicked in the pagination
   const handlePageClick = (event, page) => {
 
     setPage(page)
-    currentPage.current = '&page='.concat(page);
 
-    const searchString = process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current)
-    setSearchParam(searchString);
-
-    sessionStorage.setItem("url", searchString);
+    //Call the session storage function
+    saveInSessionStorage()
   }
   
   useEffect(() => {
