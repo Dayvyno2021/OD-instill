@@ -8,6 +8,8 @@ import Person2Icon from '@mui/icons-material/Person2';
 import Person3Icon from '@mui/icons-material/Person3';
 import FlagIcon from '@mui/icons-material/Flag';
 import TranslateIcon from '@mui/icons-material/Translate';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Link } from "react-router-dom";
 
 const MovieScreen = () => {
 
@@ -31,6 +33,9 @@ const MovieScreen = () => {
 
   return (
     <div className='moviescreen'>
+      <Link to='/' className="moviescreen-back">
+        <ArrowBackIcon color="secondary" fontSize="large" />
+      </Link>
       {isLoading && <Loader/>}
       <div className="movie">
         <h1 className="header-3 movie-title"> {data?.Title} </h1>

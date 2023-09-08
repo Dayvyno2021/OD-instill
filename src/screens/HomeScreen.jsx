@@ -44,7 +44,7 @@ const HomeScreen = () => {
     for (let i=0; i<apiArray.length; i++){
         const paramArray = apiArray[i].split('=');
         if (paramArray[0] === 'page'){
-            return paramArray[1];
+            return Number(paramArray[1]);
         }
     }
     
