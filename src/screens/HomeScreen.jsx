@@ -82,6 +82,8 @@ const HomeScreen = () => {
     if (type !== '') {
       //Extract the exact type format needed to query the databse
       currentType.current = '&type='.concat(type);
+    } else {
+      currentType.current = ''
     }
     
     if (!title) {
@@ -92,7 +94,6 @@ const HomeScreen = () => {
     saveInSessionStorage(page)
 
   }
-
 
   //This function handles the loading of a new page when a page value is clicked in the pagination
   const handlePageClick = useCallback((event, page) => {
