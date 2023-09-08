@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback} from 'react';
+import { useState, useEffect, useCallback} from 'react';
 import { useGetMoviesByIdentityQuery } from '../slices/apiSlices';
 import Card from '../components/Card';
 import Pagination from '../components/Pagination';
@@ -21,39 +21,45 @@ const HomeScreen = () => {
   //The RTK function making the query call to the OMDB database
   const { data, isLoading } = useGetMoviesByIdentityQuery(searchParam || url);
 
+  function sessionTitle(urlString, val){
+    if (urlString){
+        
+      let urlArray= urlString.split('&');  
+      for (let i=0; i<urlArray.length; i++){
+          const paramArray = urlArray[i].split('=');
+
+          if (paramArray[0]===val){
+              return paramArray[1]
+          }
+      }
+  }
+}
+
   //Handle movie title changes from the html input
-  const [title, setTitle] = useState('');
-  //Store the exact title string (example "&s=title") needed to make query to the OMDB database
-  const currentTitle = useRef('');    
+  const [title, setTitle] = useState(sessionTitle(url, 's') || '');
 
 
   //Handle movie type changes from the html input
-  const [type, setType] = useState('');
-  //Store the exact type string (example "&type=type") needed to make query to the OMDB database
-  const currentType = useRef('')
+  const [type, setType] = useState(sessionTitle(url, 'type') || '');
 
   //Handle year of movies input from the html input
-  const [year, setYear] = useState('');
-  //Store the exact year string (example "&y=year") needed to make query to the OMDB database
-  const currentValidYear = useRef('')
+  const [year, setYear] = useState(sessionTitle(url, 'y') || '');
 
 
   //Handle page changes from the pagination component
-  const [page, setPage] = useState(1);
- 
- 
-  //Store the exact page string (example "&page=page") needed to make query to the OMDB database
-  const currentPage = useRef('');
+  const [page, setPage] = useState(Number(sessionTitle(url, 'page')) || 1);
 
   //Function to the query url in session storage
-  const saveInSessionStorage = useCallback((page) => { 
+  const saveInSessionStorage = useCallback((page, titleVal, typeVal, yearVal) => { 
 
     //Extract the exact page format needed to query the database
-    currentPage.current = '&page='.concat(page)
+    setPage(page)
+    const pageVal = '&page='.concat(page)
 
     //searchString is the complete string need to query the database along with the database domain
-    const searchString = process.env.REACT_APP_APIKEY + currentTitle.current?.concat(currentValidYear.current, currentType.current, currentPage.current)
+    const searchString = process.env.REACT_APP_APIKEY + titleVal.concat(yearVal, typeVal, pageVal)
     setSearchParam(searchString);
+    // console.log(searchString);
 
     sessionStorage.setItem("url", searchString);
 
@@ -64,26 +70,28 @@ const HomeScreen = () => {
   const handleSearch = (e) => {
     e.preventDefault();
 
+    let titleString, yearString, typeString;
+
     if (year < 0 || year > currentYear) {
       //stop execution if value entered by user is -negative or above 2023
       return;
     } else {
       if (year >= 0 && year <= currentYear) {
         //extract the exact year string format needed to query the database
-        currentValidYear.current = '&y='.concat(year);
+        yearString = '&y='.concat(year)
       }
     }
 
     if (title !== '') {
       //Extract the exact title format needed to query the databse
-      currentTitle.current = '&s='.concat(title);
+      titleString = '&s='.concat(title)
     }
 
     if (type !== '') {
       //Extract the exact type format needed to query the databse
-      currentType.current = '&type='.concat(type);
+      typeString = '&type='.concat(type)
     } else {
-      currentType.current = ''
+      typeString = '';
     }
     
     if (!title) {
@@ -91,19 +99,21 @@ const HomeScreen = () => {
     }
 
     //Call the session storage function
-    saveInSessionStorage(page)
+    saveInSessionStorage(page, titleString, typeString, yearString);
 
   }
 
   //This function handles the loading of a new page when a page value is clicked in the pagination
   const handlePageClick = useCallback((event, page) => {
+
+    setPage(page);
+    const newSearchParam = url.slice(0, -1).concat(page)
+    sessionStorage.setItem("url", newSearchParam);
+
+    setSearchParam(newSearchParam);
     
-    setPage(page)
 
-    //Call the session storage function
-    saveInSessionStorage(page);
-
-  }, [saveInSessionStorage])
+  }, [url])
 
   
   useEffect(() => {
