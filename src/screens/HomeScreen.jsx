@@ -5,7 +5,6 @@ import Pagination from '../components/Pagination';
 import Loader from '../components/Loader';
 
 
-
 const HomeScreen = () => {
 
   //Manages the year so that a user cannot choose a year above 2023
@@ -16,6 +15,8 @@ const HomeScreen = () => {
 
   //Store the url string in our session to avoid losing of data in cases of refresh or forward and backward click
   const url = sessionStorage.getItem("url") ? sessionStorage.getItem("url") : '';
+  // console.log(url);
+  
   
   //The RTK function making the query call to the OMDB database
   const { data, isLoading } = useGetMoviesByIdentityQuery(searchParam || url);
@@ -23,7 +24,7 @@ const HomeScreen = () => {
   //Handle movie title changes from the html input
   const [title, setTitle] = useState('');
   //Store the exact title string (example "&s=title") needed to make query to the OMDB database
-  const currentTitle = useRef('');
+  const currentTitle = useRef('');    
 
 
   //Handle movie type changes from the html input
@@ -36,15 +37,41 @@ const HomeScreen = () => {
   //Store the exact year string (example "&y=year") needed to make query to the OMDB database
   const currentValidYear = useRef('')
 
+//Extract the present page incase of page reload
+  const extractPageFromSession = useCallback((api) => {
+  
+    const apiArray = api.split('&');
+    for (let i=0; i<apiArray.length; i++){
+        const paramArray = apiArray[i].split('=');
+        if (paramArray[0] === 'page'){
+            return paramArray[1];
+        }
+    }
+    
+  }, [])
+  
+  // const extractPageFromSession = (api) => {
+  //     const apiArray = api.split('&');
+  //     for (let i=0; i<apiArray.length; i++){
+  //         const paramArray = apiArray[i].split('=');
+  //         if (paramArray[0] === 'page'){
+  //             return paramArray[1];
+  //         }
+  //     }
+      
+  // }
+
+
 
   //Handle page changes from the pagination component
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(extractPageFromSession(url)? extractPageFromSession(url) : 1 );
+ 
+ 
   //Store the exact page string (example "&page=page") needed to make query to the OMDB database
-  const currentPage = useRef('')
-
+  const currentPage = useRef('');
 
   //Function to the query url in session storage
-  const saveInSessionStorage = useCallback(() => { 
+  const saveInSessionStorage = useCallback((page) => { 
 
     //Extract the exact page format needed to query the database
     currentPage.current = '&page='.concat(page)
@@ -55,7 +82,7 @@ const HomeScreen = () => {
 
     sessionStorage.setItem("url", searchString);
 
-  }, [page])
+  }, [])
 
 
   //The HTML form to extract the users input
@@ -87,22 +114,73 @@ const HomeScreen = () => {
     }
 
     //Call the session storage function
-    saveInSessionStorage()
+    saveInSessionStorage(page)
 
   }
 
 
   //This function handles the loading of a new page when a page value is clicked in the pagination
-  const handlePageClick = (event, page) => {
-
+  const handlePageClick = useCallback((event, page) => {
+    
     setPage(page)
 
     //Call the session storage function
-    saveInSessionStorage()
-  }
+    saveInSessionStorage(page);
+
+  }, [saveInSessionStorage])
+
+//Restore the states incase of refresh
+  const restoreparamValues = useCallback(() => {
+
+    //Fetch the url on the session storage
+    const url = sessionStorage.getItem("url");
+
+    if (url) {
+      //Convert the url string into an array and loop through it to restore our states
+      const urlArray = url.split('&');
+      for (var i = 0; i < urlArray.length; i++){
+
+        const paramArray = urlArray[i].split('=');
+
+        //Update the title and currentTitle state
+        if (paramArray[0] === 's') {
+          setTitle(paramArray[1]);
+          currentTitle.current = '&s='.concat(paramArray[1]);
+        } 
+
+        //Update the page and current page state
+        if (paramArray[0] === 'page') {
+          setPage(Number(paramArray[1]));
+          currentPage.current = '&page='.concat(paramArray[1])
+        }
+
+        //Update the year and currentValidYear state
+        if (paramArray[0] === 'y') {
+          setYear(paramArray[1]);
+          currentValidYear.current = '&y='.concat(paramArray[1]);
+        }
+
+        //Update the type and currentType State
+        if (paramArray[0] === 'type') {
+          setType(paramArray[1]);
+          currentType.current = '&type='.concat(paramArray[1]);
+        }
+      }
+
+      saveInSessionStorage(page)//
+    }
+  }, [saveInSessionStorage, page])
+
+
   
   useEffect(() => {
-  }, [searchParam, page])
+
+  // Run this function if title is false.
+  if (!title && url) {
+    restoreparamValues();
+  }
+  
+  }, [searchParam, restoreparamValues, title, url])
 
   return (
     <div className="home">
