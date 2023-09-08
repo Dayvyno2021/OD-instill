@@ -1,3 +1,5 @@
+//Redux official method of implementing the store
+
 import { configureStore } from "@reduxjs/toolkit";
 import { searchSlice } from "./slices/apiSlices";
 
