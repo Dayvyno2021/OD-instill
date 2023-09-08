@@ -37,31 +37,6 @@ const HomeScreen = () => {
   //Store the exact year string (example "&y=year") needed to make query to the OMDB database
   const currentValidYear = useRef('')
 
-//Extract the present page incase of page reload
-  // const extractPageFromSession = useCallback((api) => {
-  
-  //   const apiArray = api.split('&');
-  //   for (let i=0; i<apiArray.length; i++){
-  //       const paramArray = apiArray[i].split('=');
-  //       if (paramArray[0] === 'page'){
-  //           return Number(paramArray[1]);
-  //       }
-  //   }
-    
-  // }, [])
-  
-  // const extractPageFromSession = (api) => {
-  //     const apiArray = api.split('&');
-  //     for (let i=0; i<apiArray.length; i++){
-  //         const paramArray = apiArray[i].split('=');
-  //         if (paramArray[0] === 'page'){
-  //             return paramArray[1];
-  //         }
-  //     }
-      
-  // }
-
-
 
   //Handle page changes from the pagination component
   const [page, setPage] = useState(1);
@@ -93,7 +68,7 @@ const HomeScreen = () => {
       //stop execution if value entered by user is -negative or above 2023
       return;
     } else {
-      if (year > 0 && year <= currentYear) {
+      if (year >= 0 && year <= currentYear) {
         //extract the exact year string format needed to query the database
         currentValidYear.current = '&y='.concat(year);
       }
@@ -129,58 +104,10 @@ const HomeScreen = () => {
 
   }, [saveInSessionStorage])
 
-//Restore the states incase of refresh
-  // const restoreparamValues = useCallback(() => {
-
-  //   //Fetch the url on the session storage
-  //   const url = sessionStorage.getItem("url");
-
-  //   if (url) {
-  //     //Convert the url string into an array and loop through it to restore our states
-  //     const urlArray = url.split('&');
-  //     for (var i = 0; i < urlArray.length; i++){
-
-  //       const paramArray = urlArray[i].split('=');
-
-  //       //Update the title and currentTitle state
-  //       if (paramArray[0] === 's') {
-  //         setTitle(paramArray[1]);
-  //         currentTitle.current = '&s='.concat(paramArray[1]);
-  //       } 
-
-  //       //Update the page and current page state
-  //       if (paramArray[0] === 'page') {
-  //         setPage(Number(paramArray[1]));
-  //         currentPage.current = '&page='.concat(paramArray[1])
-  //       }
-
-  //       //Update the year and currentValidYear state
-  //       if (paramArray[0] === 'y') {
-  //         setYear(paramArray[1]);
-  //         currentValidYear.current = '&y='.concat(paramArray[1]);
-  //       }
-
-  //       //Update the type and currentType State
-  //       if (paramArray[0] === 'type') {
-  //         setType(paramArray[1]);
-  //         currentType.current = '&type='.concat(paramArray[1]);
-  //       }
-  //     }
-
-  //     saveInSessionStorage(page)//
-  //   }
-  // }, [saveInSessionStorage, page])
-
-
   
   useEffect(() => {
-
-  // Run this function if title is false.
-  // if (!title && url) {
-  //   restoreparamValues();
-  // }
   
-  }, [searchParam /*, restoreparamValues, title, url*/])
+  }, [searchParam ])
 
   return (
     <div className="home">
