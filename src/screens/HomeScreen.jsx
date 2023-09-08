@@ -60,7 +60,7 @@ const HomeScreen = () => {
   }, [])
 
 
-  //The HTML form to extract the users input
+  //The HTML form action to extract the users input
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -120,7 +120,7 @@ const HomeScreen = () => {
           <input required type="text" id='title' className='input-control-search input' value={title}
             onChange={e=>setTitle(e.target.value)} placeholder='enter movie title'
           />
-        <p className="search-valid">{title ?(''):('* Title is required')}</p>
+        <p className="search-valid">{title ?(''):('* Title is required for a search')}</p>
         </div>
         <div className="input-control">
           <label htmlFor="type" className='input-control-label'>Movie Type</label>
