@@ -8,9 +8,6 @@ import { dateYears } from '../data';
 
 const HomeScreen = () => {
 
-  //Manages the year so that a user cannot choose a year above 2023
-  const currentYear = new Date().getFullYear();
-
   //The query string which we will use to query the OMDb API
   const [searchParam, setSearchParam] = useState('');
 
@@ -161,7 +158,7 @@ const HomeScreen = () => {
         <div className="input-control">
           <label htmlFor="type" className='input-control-label'>Movie Type</label>
           <select value={type} id="type" className='input-control-id input' onChange={e=>setType(e.target.value)}>
-            <option value=''>All Types</option>
+            <option value=''>Null</option>
             <option value='movie'>Movie</option>
             <option value='series'>Series</option>
             <option value='episode'>Episode</option>
@@ -179,7 +176,6 @@ const HomeScreen = () => {
             }
             <option value="">Null</option>
           </select>
-        <p className='search-valid'>{(year < 0 || year > currentYear) ? 'Invalid Year' : ''}</p>
         </div>
         <div className="submit">
           <button type='submit' disabled={!title} className={title? 'valid' : 'invalid'}>
