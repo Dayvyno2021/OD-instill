@@ -178,11 +178,6 @@ const HomeScreen = () => {
               ))
             }
             <option value="">Null</option>
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-            <option value="2026">2026</option>
-            <option value="2027">2027</option>
-            <option value="2028">2028</option>
           </select>
         <p className='search-valid'>{(year < 0 || year > currentYear) ? 'Invalid Year' : ''}</p>
         </div>
