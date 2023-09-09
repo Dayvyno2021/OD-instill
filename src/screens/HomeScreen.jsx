@@ -211,7 +211,7 @@ const HomeScreen = () => {
           <div className="search-total"><p>Total Related Movies: {data?.totalResults} </p> </div>
 
           {
-            data?.Search?.data?.length > 1 ?
+            data?.Search?.length > 1 ?
               (
                 <div className="home-pagination">
                   <Pagination count={Math.ceil(data?.totalResults/10)} page={page} handlePageClick={handlePageClick} />
