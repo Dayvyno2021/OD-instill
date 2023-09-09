@@ -54,12 +54,10 @@
         background-color: $color-neutral-100;
         transition: all .3s;
         color: $color-grey-600;
-        // padding-right: 2rem;
 
         @include sm{
           font-size: 1.4rem;
           height: 100%;
-          // padding: .5rem .5rem .5rem 1rem;
         }
 
         &::placeholder{

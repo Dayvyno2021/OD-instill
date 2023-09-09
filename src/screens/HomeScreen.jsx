@@ -3,6 +3,7 @@ import { useGetMoviesByIdentityQuery } from '../slices/apiSlices';
 import Card from '../components/Card';
 import Pagination from '../components/Pagination';
 import Loader from '../components/Loader';
+import { dateYears } from '../data';
 
 
 const HomeScreen = () => {
@@ -91,23 +92,17 @@ const HomeScreen = () => {
 
     let titleString, yearString, typeString;
 
-    if (year < 0 || year > currentYear) {
-      //stop execution if value entered by user is -negative or above 2023
-      return;
+    if (year) {
+      yearString = '&y='.concat(year)
     } else {
-      if (year > 0 && year <= currentYear) {
-        //extract the exact year string format needed to query the database
-        yearString = '&y='.concat(year)
-      }
-      if (year === '') {
-        //extract the exact year string format needed to query the database
-        yearString = '';
-      }
+      yearString = '';
     }
 
-    if (title !== '') {
-      //Extract the exact title format needed to query the databse
+    //Extract the exact title format needed to query the databse
+    if (title) {
       titleString = '&s='.concat(title)
+    } else {
+      return;
     }
 
 
@@ -118,9 +113,9 @@ const HomeScreen = () => {
       typeString = '';
     }
     
-    if (!title) {
-      return;
-    }
+    // if (!title) {
+    //   return;
+    // }
 
     //Call the session storage function
 
@@ -174,9 +169,21 @@ const HomeScreen = () => {
         </div>
         <div className="input-control">
           <label htmlFor="year" className='input-control-label' >Year</label>
-          <input type="number" id='year' className='input-control-search input'
-            value={year} onChange={e=>setYear(e.target.value)} placeholder='enter year'
-          />
+          <select className='input-control-id input' name="years" id="year" value={year} onChange={e => setYear(e.target.value)} >
+            {
+              dateYears()?.map((y) => (
+                <option value={y.toString()} key={y}>
+                  {y}
+                </option>
+              ))
+            }
+            <option value="">Null</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+          </select>
         <p className='search-valid'>{(year < 0 || year > currentYear) ? 'Invalid Year' : ''}</p>
         </div>
         <div className="submit">
