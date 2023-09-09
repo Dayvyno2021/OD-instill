@@ -21,19 +21,38 @@ const HomeScreen = () => {
   //The RTK function making the query call to the OMDB database
   const { data, isLoading } = useGetMoviesByIdentityQuery(searchParam || url);
 
-  function sessionTitle(urlString, val){
-    if (urlString){
+  // function sessionTitle(urlString, val){
+  //   if (urlString){
         
+  //     let urlArray= urlString.split('&');  
+  //     for (let i=0; i<urlArray.length; i++){
+  //         const paramArray = urlArray[i].split('=');
+
+  //       if (paramArray[0]===val){
+  //         return paramArray[1]
+  //       }
+  //     }
+  //   }
+  //   return ''
+  // }
+  
+  
+  const sessionTitle = useCallback((urlString, val) => {
+
+    if (urlString){  
       let urlArray= urlString.split('&');  
       for (let i=0; i<urlArray.length; i++){
           const paramArray = urlArray[i].split('=');
 
-          if (paramArray[0]===val){
-              return paramArray[1]
-          }
+        if (paramArray[0]===val){
+          return paramArray[1]
+        }
       }
-  }
-}
+    }
+    return ''
+
+  }, [])
+  
 
   //Handle movie title changes from the html input
   const [title, setTitle] = useState(sessionTitle(url, 's') || '');
@@ -76,9 +95,13 @@ const HomeScreen = () => {
       //stop execution if value entered by user is -negative or above 2023
       return;
     } else {
-      if (year >= 0 && year <= currentYear) {
+      if (year > 0 && year <= currentYear) {
         //extract the exact year string format needed to query the database
         yearString = '&y='.concat(year)
+      }
+      if (year === '') {
+        //extract the exact year string format needed to query the database
+        yearString = '';
       }
     }
 
@@ -86,6 +109,7 @@ const HomeScreen = () => {
       //Extract the exact title format needed to query the databse
       titleString = '&s='.concat(title)
     }
+
 
     if (type !== '') {
       //Extract the exact type format needed to query the databse
@@ -99,7 +123,14 @@ const HomeScreen = () => {
     }
 
     //Call the session storage function
-    saveInSessionStorage(page, titleString, typeString, yearString);
+
+    if ((title !== sessionTitle(url, 's')) || (year !== sessionTitle(url, 'y')) ||(type !== sessionTitle(url, 'type'))){
+      // setPage(1);
+      // console.log("PAGE: ", page);
+      saveInSessionStorage(1, titleString, typeString, yearString);
+    } else {
+      saveInSessionStorage(page, titleString, typeString, yearString);
+    }
 
   }
 
@@ -178,9 +209,17 @@ const HomeScreen = () => {
               
           </div>
           <div className="search-total"><p>Total Related Movies: {data?.totalResults} </p> </div>
-          <div className="home-pagination">
-            <Pagination count={Math.ceil(data?.totalResults/10)} page={page} handlePageClick={handlePageClick} />
-          </div>
+
+          {
+            data?.Search?.data?.length > 1 ?
+              (
+                <div className="home-pagination">
+                  <Pagination count={Math.ceil(data?.totalResults/10)} page={page} handlePageClick={handlePageClick} />
+                </div>
+              )
+              :
+            ('')
+          }
         </>
       }
     </div>
