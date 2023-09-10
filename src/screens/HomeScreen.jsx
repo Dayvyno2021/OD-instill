@@ -18,22 +18,6 @@ const HomeScreen = () => {
   
   //The RTK function making the query call to the OMDB database
   const { data, isLoading } = useGetMoviesByIdentityQuery(searchParam || url);
-
-  // function sessionTitle(urlString, val){
-  //   if (urlString){
-        
-  //     let urlArray= urlString.split('&');  
-  //     for (let i=0; i<urlArray.length; i++){
-  //         const paramArray = urlArray[i].split('=');
-
-  //       if (paramArray[0]===val){
-  //         return paramArray[1]
-  //       }
-  //     }
-  //   }
-  //   return ''
-  // }
-  
   
   const sessionTitle = useCallback((urlString, val) => {
 
@@ -109,16 +93,11 @@ const HomeScreen = () => {
     } else {
       typeString = '';
     }
-    
-    // if (!title) {
-    //   return;
-    // }
 
     //Call the session storage function
 
     if ((title !== sessionTitle(url, 's')) || (year !== sessionTitle(url, 'y')) ||(type !== sessionTitle(url, 'type'))){
-      // setPage(1);
-      // console.log("PAGE: ", page);
+
       saveInSessionStorage(1, titleString, typeString, yearString);
     } else {
       saveInSessionStorage(page, titleString, typeString, yearString);
@@ -158,7 +137,7 @@ const HomeScreen = () => {
         <div className="input-control">
           <label htmlFor="type" className='input-control-label'>Movie Type</label>
           <select value={type} id="type" className='input-control-id input' onChange={e=>setType(e.target.value)}>
-            <option value=''>Null</option>
+            <option value=''>All Types</option>
             <option value='movie'>Movie</option>
             <option value='series'>Series</option>
             <option value='episode'>Episode</option>
@@ -174,7 +153,7 @@ const HomeScreen = () => {
                 </option>
               ))
             }
-            <option value="">Null</option>
+            <option value="">Nil</option>
           </select>
         </div>
         <div className="submit">
